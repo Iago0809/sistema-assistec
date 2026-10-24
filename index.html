@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assistec Dashboard - Gestão Completa</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Customizar Input Datalist arrow */
+        input::-webkit-calendar-picker-indicator { opacity: 1; color: #94a3b8; cursor: pointer; }
+    </style>
+</head>
+<body class="bg-[#F8FAFC] text-gray-800 h-screen flex overflow-hidden selection:bg-blue-200">
+
+    <!-- SIDEBAR DARK -->
+    <aside class="w-72 bg-[#0F172A] text-gray-300 flex flex-col shadow-2xl z-20 shrink-0 hidden md:flex">
+        <!-- Info da Loja -->
+        <div class="p-6 border-b border-gray-800/60">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="bg-blue-600 p-2.5 rounded-xl text-white shadow-lg shadow-blue-900/20">
+                    <i data-lucide="snowflake" class="w-7 h-7"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-white tracking-tight">Assistec</h1>
+                    <p class="text-[11px] text-blue-400 uppercase tracking-wider font-bold">Assistência Técnica</p>
+                </div>
+            </div>
+            
+            <div class="bg-[#1E293B] p-3.5 rounded-xl border border-gray-700/50">
+                <div class="flex items-center gap-2 mb-1">
+                    <i data-lucide="star" class="fill-yellow-400 text-yellow-400 w-4 h-4"></i>
+                    <span class="text-white font-bold text-sm">3,8</span>
+                    <span class="text-gray-400 text-xs">(78 avaliações)</span>
+                </div>
+                <p class="text-xs text-gray-400 mt-1">Máquinas de Lavar e Refrigeração</p>
+            </div>
+        </div>
+
+        <!-- Navegação -->
+        <nav class="flex-1 py-6 px-4 space-y-2 overflow-y-auto" id="nav-menu">
+            <button data-target="dashboard" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 bg-blue-600 text-white shadow-lg shadow-blue-900/20 font-medium">
+                <i data-lucide="layout-dashboard" class="w-5 h-5"></i> Dashboard
+            </button>
+            <button data-target="clientes" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-[#1E293B] hover:text-white text-gray-400 font-medium">
+                <i data-lucide="users" class="w-5 h-5"></i> Clientes
+            </button>
+            <button data-target="os" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-[#1E293B] hover:text-white text-gray-400 font-medium">
+                <i data-lucide="wrench" class="w-5 h-5"></i> Ordens de Serviço
+            </button>
+            <button data-target="estoque" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-[#1E293B] hover:text-white text-gray-400 font-medium">
+                <i data-lucide="package" class="w-5 h-5"></i> Estoque
+            </button>
+            <button data-target="financeiro" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-[#1E293B] hover:text-white text-gray-400 font-medium">
+                <i data-lucide="dollar-sign" class="w-5 h-5"></i> Financeiro
+            </button>
+            <button data-target="admin" class="nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-[#1E293B] hover:text-white text-gray-400 font-medium">
+                <i data-lucide="shield" class="w-5 h-5"></i> Administradores
+            </button>
+        </nav>
+
+        <!-- Rodapé da Sidebar -->
+        <div class="p-6 bg-[#0B1121] border-t border-gray-800/60">
+            <div class="space-y-3">
+                <div class="flex items-start gap-3 text-sm">
+                    <i data-lucide="phone" class="text-blue-400 mt-0.5 w-4 h-4"></i>
+                    <div>
+                        <p class="text-white font-medium">(61) 3629-8524</p>
+                        <p class="text-xs text-gray-500">Abre seg. às 08:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        
+        <!-- HEADER TOP -->
+        <header class="h-20 bg-white border-b border-gray-200/60 flex items-center justify-between px-8 shrink-0 z-10 shadow-sm">
+            <h1 id="header-title" class="text-2xl font-bold text-gray-800 tracking-tight">Visão Geral</h1>
+            
+            <div class="flex items-center gap-4">
+                <button class="relative p-2 text-gray-500 hover:text-blue-600 transition bg-gray-50 rounded-full">
+                    <i data-lucide="bell" class="w-5 h-5"></i>
+                    <span class="absolute top-1 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                <div class="h-8 w-px bg-gray-200"></div>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-600 to-blue-400 flex items-center justify-center text-white font-bold shadow-md">TA</div>
+                    <div class="hidden sm:block text-sm">
+                        <p class="font-bold text-gray-800">Técnico Admin</p>
+                        <p class="text-xs text-gray-500">Gerente</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- CONTEÚDO DINÂMICO -->
+        <div class="flex-1 overflow-auto p-6 md:p-8 w-full bg-[#F8FAFC]">
+            <div class="max-w-7xl mx-auto w-full pb-20 md:pb-0">
+                
+                <!-- ABA: DASHBOARD -->
+                <div id="tab-dashboard" class="tab-content active space-y-6">
+                    <!-- Cards de Métricas (Grid 3x2) -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <!-- Card 1: Faturamento -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-24 h-24 bg-emerald-50 rounded-bl-full -z-0"></div>
+                            <div class="flex justify-between items-start mb-2 relative z-10">
+                                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Faturamento (Pago)</p>
+                                <div class="p-2.5 bg-emerald-100 text-emerald-600 rounded-xl"><i data-lucide="dollar-sign" class="w-5 h-5"></i></div>
+                            </div>
+                            <h3 class="text-3xl font-black text-gray-800 mt-auto relative z-10" id="dash-faturamento">R$ 0,00</h3>
+                        </div>
+                        
+                        <!-- Card 2: Ticket Médio -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Ticket Médio</p>
+                                <div class="p-2.5 bg-indigo-100 text-indigo-600 rounded-xl"><i data-lucide="trending-up" class="w-5 h-5"></i></div>
+                            </div>
+                            <h3 class="text-3xl font-black text-gray-800 mt-auto" id="dash-ticket">R$ 0,00</h3>
+                        </div>
+
+                        <!-- Card 3: Total Clientes -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">Total de Clientes</p>
+                                <div class="p-2.5 bg-purple-100 text-purple-600 rounded-xl"><i data-lucide="users" class="w-5 h-5"></i></div>
+                            </div>
+                            <h3 class="text-3xl font-black text-gray-800 mt-auto" id="dash-clientes">0</h3>
+                        </div>
+
+                        <!-- Card 4: OS Pendentes -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">OS Pendentes</p>
+                                <div class="p-2.5 bg-orange-100 text-orange-600 rounded-xl"><i data-lucide="clock" class="w-5 h-5"></i></div>
+                            </div>
+                            <h3 class="text-3xl font-black text-gray-800 mt-auto" id="dash-os-pendentes">0</h3>
+                        </div>
+
+                        <!-- Card 5: OS Concluídas -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">OS Concluídas</p>
+                                <div class="p-2.5 bg-emerald-100 text-emerald-600 rounded-xl"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+                            </div>
+                            <h3 class="text-3xl font-black text-gray-800 mt-auto" id="dash-os-concluidas">0</h3>
+                        </div>
+
+                        <!-- Card 6: OS Canceladas -->
+                        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100/50 flex flex-col">
+                            <div class="flex justify-between items-start mb-2">
+                                <p class="text-sm font-semibold text-gray-500 uppercase tracking-wider">OS Canceladas</p>
+                                <div class="p-2.5 bg-red-100 text-red-600 rounded-xl"><i data-lucide="x-circle" class="w-5 h-5"></i></div>
+                            </div>
+                            <h3 class="text-3xl font-black text-gray-800 mt-auto" id="dash-os-canceladas">0</h3>
+                        </div>
+                    </div>
+
+                    <!-- Secão Inferior do Dashboard -->
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Últimas OS -->
+                        <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden flex flex-col">
+                            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="list" class="w-5 h-5 text-blue-500"></i> Últimas OS Adicionadas</h3>
+                            </div>
+                            <div class="overflow-x-auto flex-1">
+                                <table class="w-full text-left">
+                                    <thead class="bg-gray-50/50 text-gray-500 text-xs uppercase font-semibold">
+                                        <tr>
+                                            <th class="py-3 px-5">OS</th>
+                                            <th class="py-3 px-5">Cliente</th>
+                                            <th class="py-3 px-5">Status</th>
+                                            <th class="py-3 px-5 text-right">Valor</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="dash-table-os" class="divide-y divide-gray-100 text-sm">
+                                        <!-- Render via JS -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Alertas de Estoque Baixo -->
+                        <div class="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden flex flex-col">
+                            <div class="p-5 border-b border-gray-100 flex justify-between items-center bg-white">
+                                <h3 class="font-bold text-gray-800 flex items-center gap-2"><i data-lucide="alert-triangle" class="w-5 h-5 text-orange-500"></i> Estoque Baixo ( < 5 )</h3>
+                            </div>
+                            <div class="p-5 flex-1 overflow-y-auto max-h-80 space-y-3" id="dash-lista-estoque">
+                                <!-- Render via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA: CLIENTES -->
+                <div id="tab-clientes" class="tab-content space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Gestão de Clientes</h2>
+                        <button onclick="openModalCliente()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-blue-500/30">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Novo Cliente
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
+                        <div class="p-5 border-b border-gray-100 bg-white">
+                            <div class="relative max-w-md">
+                                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                                <input type="text" id="search-clientes" placeholder="Pesquisar cliente por nome, telefone ou ID..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition">
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50/50 text-gray-500 text-xs uppercase font-semibold">
+                                    <tr>
+                                        <th class="py-4 px-6">ID</th>
+                                        <th class="py-4 px-6">Nome Completo</th>
+                                        <th class="py-4 px-6">Telefone</th>
+                                        <th class="py-4 px-6">Endereço</th>
+                                        <th class="py-4 px-6 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-clientes" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Renderizado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA: OS -->
+                <div id="tab-os" class="tab-content space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Ordens de Serviço</h2>
+                        <button onclick="openModalOS()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-blue-500/30">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Nova OS
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
+                        <div class="p-5 border-b border-gray-100 bg-white flex flex-col sm:flex-row gap-4">
+                            <div class="relative max-w-md w-full">
+                                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                                <input type="text" id="search-os" placeholder="Buscar por Nº OS ou Cliente..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition">
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50/50 text-gray-500 text-xs uppercase font-semibold">
+                                    <tr>
+                                        <th class="py-4 px-6">Nº OS</th>
+                                        <th class="py-4 px-6">Cliente</th>
+                                        <th class="py-4 px-6">Aparelho / Defeito</th>
+                                        <th class="py-4 px-6 text-center">Status Serviço</th>
+                                        <th class="py-4 px-6 text-center">Pagamento</th>
+                                        <th class="py-4 px-6 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-os" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Renderizado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA: ESTOQUE -->
+                <div id="tab-estoque" class="tab-content space-y-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Controle de Estoque</h2>
+                        <button onclick="openModalEstoque()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-blue-500/30">
+                            <i data-lucide="plus" class="w-5 h-5"></i> Adicionar Peça
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
+                        <div class="p-5 border-b border-gray-100 bg-white">
+                            <div class="relative max-w-md">
+                                <i data-lucide="search" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"></i>
+                                <input type="text" id="search-pecas" placeholder="Pesquisar peça por código ou descrição..." class="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 text-sm transition">
+                            </div>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50/50 text-gray-500 text-xs uppercase font-semibold">
+                                    <tr>
+                                        <th class="py-4 px-6">Código</th>
+                                        <th class="py-4 px-6">Descrição da Peça</th>
+                                        <th class="py-4 px-6 text-center">Qtd</th>
+                                        <th class="py-4 px-6 text-right">Preço (R$)</th>
+                                        <th class="py-4 px-6 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-estoque" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Renderizado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA: FINANCEIRO -->
+                <div id="tab-financeiro" class="tab-content space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Gestão Financeira</h2>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
+                        <div class="p-5 border-b border-gray-100 bg-white">
+                            <h3 class="font-bold text-gray-800">Contas a Receber (Baseado nas OS)</h3>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50/50 text-gray-500 text-xs uppercase font-semibold">
+                                    <tr>
+                                        <th class="py-4 px-6">Data</th>
+                                        <th class="py-4 px-6">Ref (OS) / Cliente</th>
+                                        <th class="py-4 px-6 text-center">Status Financeiro</th>
+                                        <th class="py-4 px-6 text-right">Valor Final</th>
+                                        <th class="py-4 px-6 text-center">Ações de Pagamento</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-financeiro" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Renderizado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA: ADMINISTRADORES -->
+                <div id="tab-admin" class="tab-content space-y-6">
+                    <div class="flex justify-between items-center">
+                        <h2 class="text-2xl font-bold text-gray-800 tracking-tight">Administradores</h2>
+                        <button onclick="openModalAdmin()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-xl font-medium flex items-center gap-2 transition shadow-lg shadow-blue-500/30">
+                            <i data-lucide="shield-plus" class="w-5 h-5"></i> Novo Admin
+                        </button>
+                    </div>
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100/50 overflow-hidden">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead class="bg-gray-50/50 text-gray-500 text-xs uppercase font-semibold">
+                                    <tr>
+                                        <th class="py-4 px-6">Usuário</th>
+                                        <th class="py-4 px-6">Email</th>
+                                        <th class="py-4 px-6 text-center">Cargo</th>
+                                        <th class="py-4 px-6 text-center">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="table-admin" class="divide-y divide-gray-100 text-sm">
+                                    <!-- Renderizado via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- MOBILE BOTTOM NAV -->
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-2 flex justify-around z-50 overflow-x-auto">
+        <button data-target="dashboard" class="mobile-nav-btn p-3 rounded-xl text-blue-600 bg-blue-50 shrink-0"><i data-lucide="layout-dashboard"></i></button>
+        <button data-target="clientes" class="mobile-nav-btn p-3 rounded-xl text-gray-500 shrink-0"><i data-lucide="users"></i></button>
+        <button data-target="os" class="mobile-nav-btn p-3 rounded-xl text-gray-500 shrink-0"><i data-lucide="wrench"></i></button>
+        <button data-target="estoque" class="mobile-nav-btn p-3 rounded-xl text-gray-500 shrink-0"><i data-lucide="package"></i></button>
+        <button data-target="financeiro" class="mobile-nav-btn p-3 rounded-xl text-gray-500 shrink-0"><i data-lucide="dollar-sign"></i></button>
+        <button data-target="admin" class="mobile-nav-btn p-3 rounded-xl text-gray-500 shrink-0"><i data-lucide="shield"></i></button>
+    </div>
+
+    <!-- MODAIS DE FORMULÁRIO -->
+
+    <!-- Modal Cliente -->
+    <div id="modal-cliente" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300" id="modal-cliente-content">
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="font-bold text-lg text-gray-800" id="modal-cliente-title">Novo Cliente</h3>
+                <button onclick="closeModal('modal-cliente')" class="text-gray-400 hover:text-red-500 transition p-1 bg-white rounded-lg border border-gray-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-cliente" class="p-6 space-y-4">
+                <input type="hidden" id="cli-id">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nome Completo</label>
+                    <input type="text" id="cli-nome" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Telefone</label>
+                    <input type="text" id="cli-telefone" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white" placeholder="(00) 00000-0000">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Endereço</label>
+                    <input type="text" id="cli-endereco" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                </div>
+                <div class="pt-5 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modal-cliente')" class="px-5 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition shadow-md shadow-blue-500/20">Salvar Cliente</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal OS -->
+    <div id="modal-os" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden transform scale-95 transition-transform duration-300" id="modal-os-content">
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="font-bold text-lg text-gray-800" id="modal-os-title">Nova Ordem de Serviço</h3>
+                <button onclick="closeModal('modal-os')" class="text-gray-400 hover:text-red-500 transition p-1 bg-white rounded-lg border border-gray-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-os" class="p-6 space-y-4">
+                <input type="hidden" id="os-id">
+                
+                <!-- Pesquisa de Cliente com Datalist -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Pesquisar Cliente</label>
+                    <input type="text" id="os-cliente-input" list="lista-clientes" required placeholder="Digite o nome ou ID do cliente..." class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                    <datalist id="lista-clientes">
+                        <!-- Preenchido via JS -->
+                    </datalist>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Aparelho</label>
+                    <input type="text" id="os-aparelho" required placeholder="Ex: Geladeira Brastemp Duplex" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Defeito Relatado / Serviço</label>
+                    <textarea id="os-defeito" required rows="2" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white resize-none"></textarea>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Valor Total (R$)</label>
+                        <input type="number" step="0.01" id="os-valor" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Status do Serviço</label>
+                        <select id="os-status" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                            <option value="Pendente">Pendente</option>
+                            <option value="Aguardando Peça">Aguardando Peça</option>
+                            <option value="Concluído">Concluído</option>
+                            <option value="Cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="pt-5 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modal-os')" class="px-5 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition shadow-md shadow-blue-500/20">Salvar OS</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Estoque -->
+    <div id="modal-estoque" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300" id="modal-estoque-content">
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="font-bold text-lg text-gray-800" id="modal-estoque-title">Adicionar Peça</h3>
+                <button onclick="closeModal('modal-estoque')" class="text-gray-400 hover:text-red-500 transition p-1 bg-white rounded-lg border border-gray-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-estoque" class="p-6 space-y-4">
+                <input type="hidden" id="est-id">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Descrição da Peça</label>
+                    <input type="text" id="est-nome" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Qtd em Estoque</label>
+                        <input type="number" id="est-qtd" required min="0" class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-700 mb-1.5">Preço (R$)</label>
+                        <input type="number" step="0.01" id="est-preco" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                    </div>
+                </div>
+                <div class="pt-5 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modal-estoque')" class="px-5 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition shadow-md shadow-blue-500/20">Salvar Peça</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Admin -->
+    <div id="modal-admin" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 overflow-hidden transform scale-95 transition-transform duration-300" id="modal-admin-content">
+            <div class="px-6 py-5 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
+                <h3 class="font-bold text-lg text-gray-800" id="modal-admin-title">Novo Administrador</h3>
+                <button onclick="closeModal('modal-admin')" class="text-gray-400 hover:text-red-500 transition p-1 bg-white rounded-lg border border-gray-200"><i data-lucide="x" class="w-5 h-5"></i></button>
+            </div>
+            <form id="form-admin" class="p-6 space-y-4">
+                <input type="hidden" id="adm-id">
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Nome Completo</label>
+                    <input type="text" id="adm-nome" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                    <input type="email" id="adm-email" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white" placeholder="admin@assistec.com">
+                </div>
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-1.5">Cargo / Nível</label>
+                    <select id="adm-cargo" required class="w-full border border-gray-300 rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none transition bg-gray-50 focus:bg-white">
+                        <option value="Técnico">Técnico</option>
+                        <option value="Gerente">Gerente</option>
+                        <option value="Atendimento">Atendimento</option>
+                    </select>
+                </div>
+                <div class="pt-5 flex justify-end gap-3">
+                    <button type="button" onclick="closeModal('modal-admin')" class="px-5 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition shadow-md shadow-blue-500/20">Salvar Admin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Modal: Aplicar Desconto (No alert/prompt) -->
+    <div id="modal-desconto" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-[60] backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden">
+            <div class="px-6 py-5 border-b border-gray-100 flex items-center gap-3 bg-blue-50/50">
+                <div class="p-2 bg-blue-100 text-blue-600 rounded-lg"><i data-lucide="percent" class="w-5 h-5"></i></div>
+                <h3 class="font-bold text-lg text-gray-800">Aplicar Desconto</h3>
+            </div>
+            <form id="form-desconto" class="p-6">
+                <input type="hidden" id="desc-os-id">
+                <p class="text-sm text-gray-500 mb-4">Insira o valor em Reais (R$) a ser descontado do total desta OS. O pagamento será marcado como Concluído.</p>
+                
+                <label class="block text-sm font-semibold text-gray-700 mb-1.5">Valor do Desconto (R$)</label>
+                <input type="number" step="0.01" id="desc-valor" required min="0" class="w-full border border-gray-300 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 outline-none text-lg font-medium bg-gray-50">
+                
+                <div class="pt-6 flex justify-end gap-3">
+                    <button type="button" onclick="fecharModalDesconto()" class="px-5 py-2.5 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition">Cancelar</button>
+                    <button type="submit" class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition shadow-md">Confirmar e Pagar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Custom Modal: Confirmação de Exclusão (No confirm) -->
+    <div id="modal-confirm-delete" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-[60] backdrop-blur-sm">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-sm mx-4 overflow-hidden text-center p-6">
+            <div class="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i data-lucide="alert-triangle" class="w-8 h-8"></i>
+            </div>
+            <h3 class="font-bold text-xl text-gray-800 mb-2">Confirmar Exclusão</h3>
+            <p class="text-gray-500 mb-6 text-sm">Tem certeza que deseja excluir este item? Esta ação não pode ser desfeita.</p>
+            <div class="flex gap-3 w-full">
+                <button onclick="closeModalDelete()" class="flex-1 py-3 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-medium transition">Cancelar</button>
+                <button id="btn-confirm-delete" class="flex-1 py-3 bg-red-600 hover:bg-red-700 text-white rounded-xl font-medium transition shadow-md shadow-red-500/20">Sim, Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
+    <script>
+        // Inicializar Ícones
+        lucide.createIcons();
+
+        // ---- STATE (Memória Mockada) ----
+        let clientes = [
+            { id: 1, nome: 'João Silva Oliveira', telefone: '(61) 98888-1111', endereco: 'Quadra 12 Lote 5, Valparaíso' },
+            { id: 2, nome: 'Maria Antônia Souza', telefone: '(61) 97777-2222', endereco: 'Rua das Flores N 40, Luziânia' },
+            { id: 3, nome: 'Carlos Eduardo', telefone: '(61) 99999-3333', endereco: 'Etapa A, Qd 2, Valparaíso' }
+        ];
+
+        let ordensServico = [
+            { id: 'OS-1042', clienteId: 1, aparelho: 'Geladeira Brastemp Frost Free', defeito: 'Não gela parte de baixo', status: 'Pendente', valor: 450.00, data: '24/10/2026', pagamentoStatus: 'Pendente' },
+            { id: 'OS-1043', clienteId: 2, aparelho: 'Máquina de Lavar Electrolux 12kg', defeito: 'Placa queimada', status: 'Aguardando Peça', valor: 320.00, data: '23/10/2026', pagamentoStatus: 'Pendente' },
+            { id: 'OS-1044', clienteId: 3, aparelho: 'Microondas Panasonic', defeito: 'Não esquenta', status: 'Concluído', valor: 150.00, data: '20/10/2026', pagamentoStatus: 'Pago' }
+        ];
+
+        let estoque = [
+            { id: 'P-001', nome: 'Lâmpada de LED para Geladeira Electrolux', qtd: 15, preco: 35.00 },
+            { id: 'P-002', nome: 'Compressor Embraco 1/4', qtd: 2, preco: 380.00 },
+            { id: 'P-003', nome: 'Correia Máquina de Lavar Brastemp', qtd: 8, preco: 45.00 },
+            { id: 'P-004', nome: 'Placa Lavadora Electrolux LTE12', qtd: 1, preco: 180.00 }
+        ];
+
+        let administradores = [
+            { id: 1, nome: 'Técnico Admin', email: 'admin@assistec.com', cargo: 'Gerente' },
+            { id: 2, nome: 'Lucas Silva', email: 'lucas@assistec.com', cargo: 'Técnico' }
+        ];
+
+        // Utils
+        const formatMoney = (value) => parseFloat(value).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        const getTodayDate = () => new Date().toLocaleDateString('pt-BR');
+
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            const bgAndIcon = type === 'success' ? 'bg-emerald-600 text-white' : type === 'error' ? 'bg-red-600 text-white' : 'bg-blue-600 text-white';
+            const iconName = type === 'success' ? 'check-circle' : type === 'error' ? 'alert-circle' : 'info';
+            
+            toast.className = `fixed bottom-6 right-6 ${bgAndIcon} px-6 py-3.5 rounded-xl shadow-2xl transition-all duration-300 z-[100] flex items-center gap-3 transform translate-y-12 opacity-0 font-medium tracking-wide`;
+            toast.innerHTML = `<i data-lucide="${iconName}" class="w-5 h-5"></i> ${message}`;
+            
+            document.body.appendChild(toast);
+            lucide.createIcons();
+            
+            requestAnimationFrame(() => toast.classList.remove('translate-y-12', 'opacity-0'));
+            setTimeout(() => {
+                toast.classList.add('translate-y-12', 'opacity-0');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Variável Global para a exclusão
+        let itemToDelete = null; 
+
+        // ---- FUNÇÕES DE RENDERIZAÇÃO ----
+
+        function renderDashboard() {
+            let faturamento = 0;
+            let concluidas = 0;
+            let canceladas = 0;
+            let pendentes = 0;
+
+            ordensServico.forEach(os => {
+                if (os.pagamentoStatus === 'Pago') faturamento += os.valor;
+                
+                if (os.status === 'Concluído') concluidas++;
+                else if (os.status === 'Cancelado') canceladas++;
+                else pendentes++; // 'Pendente' ou 'Aguardando Peça'
+            });
+
+            // Atualiza Cards
+            document.getElementById('dash-faturamento').textContent = formatMoney(faturamento);
+            document.getElementById('dash-os-pendentes').textContent = pendentes;
+            document.getElementById('dash-os-concluidas').textContent = concluidas;
+            document.getElementById('dash-os-canceladas').textContent = canceladas;
+            document.getElementById('dash-clientes').textContent = clientes.length;
+
+            const ticketMedio = concluidas > 0 ? faturamento / concluidas : 0;
+            document.getElementById('dash-ticket').textContent = formatMoney(ticketMedio);
+
+            // Renderizar Últimas OS (Max 5)
+            const tbodyOs = document.getElementById('dash-table-os');
+            tbodyOs.innerHTML = '';
+            const ultimas = [...ordensServico].slice(0, 5);
+            ultimas.forEach(os => {
+                const cliente = clientes.find(c => c.id == os.clienteId);
+                const statBadge = getBadgeOS(os.status);
+                tbodyOs.innerHTML += `
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="py-3 px-5 font-semibold text-blue-600">${os.id}</td>
+                        <td class="py-3 px-5 text-gray-800 font-medium">${cliente ? cliente.nome.split(' ')[0] : '-'}</td>
+                        <td class="py-3 px-5">${statBadge}</td>
+                        <td class="py-3 px-5 text-right font-medium text-gray-700">${formatMoney(os.valor)}</td>
+                    </tr>
+                `;
+            });
+
+            // Renderizar Estoque Baixo
+            const listEstoque = document.getElementById('dash-lista-estoque');
+            listEstoque.innerHTML = '';
+            const baixos = estoque.filter(p => p.qtd < 5);
+            if(baixos.length === 0) {
+                listEstoque.innerHTML = '<p class="text-gray-500 text-sm italic">Estoque regular. Nenhuma peça em falta.</p>';
+            } else {
+                baixos.forEach(p => {
+                    listEstoque.innerHTML += `
+                        <div class="flex justify-between items-center p-3 rounded-lg border ${p.qtd === 0 ? 'bg-red-50/50 border-red-100' : 'bg-orange-50/50 border-orange-100'}">
+                            <div class="flex-1">
+                                <p class="text-sm font-semibold text-gray-800">${p.nome}</p>
+                                <p class="text-xs text-gray-500">Ref: ${p.id}</p>
+                            </div>
+                            <div class="px-3 py-1 rounded-md font-bold ${p.qtd === 0 ? 'bg-red-100 text-red-700' : 'bg-orange-100 text-orange-700'}">
+                                ${p.qtd} unid.
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+        }
+
+        function renderClientes(filter = '') {
+            const tbody = document.getElementById('table-clientes');
+            tbody.innerHTML = '';
+            
+            const listFiltered = clientes.filter(c => 
+                c.nome.toLowerCase().includes(filter.toLowerCase()) || 
+                c.telefone.includes(filter) ||
+                c.id.toString().includes(filter)
+            );
+
+            listFiltered.forEach(cli => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 transition group">
+                        <td class="py-4 px-6 text-gray-500 font-medium">#${cli.id}</td>
+                        <td class="py-4 px-6 font-semibold text-gray-800">${cli.nome}</td>
+                        <td class="py-4 px-6 text-gray-600">${cli.telefone}</td>
+                        <td class="py-4 px-6 text-gray-600 truncate max-w-xs">${cli.endereco}</td>
+                        <td class="py-4 px-6 text-center opacity-50 group-hover:opacity-100 transition">
+                            <button onclick="openModalCliente(${cli.id})" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition" title="Editar">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete('cliente', ${cli.id})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition ml-1" title="Excluir">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            // Atualizar datalist do OS Modal
+            const datalist = document.getElementById('lista-clientes');
+            datalist.innerHTML = '';
+            clientes.forEach(cli => {
+                const opt = document.createElement('option');
+                opt.value = `${cli.id} - ${cli.nome}`;
+                datalist.appendChild(opt);
+            });
+            
+            lucide.createIcons();
+        }
+
+        function getBadgeOS(status) {
+            const m = {
+                'Pendente': 'bg-gray-100 text-gray-700 border border-gray-200',
+                'Aguardando Peça': 'bg-orange-100 text-orange-700 border border-orange-200',
+                'Concluído': 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+                'Cancelado': 'bg-red-100 text-red-700 border border-red-200'
+            };
+            return `<span class="px-2.5 py-1 rounded-md text-xs font-bold ${m[status] || m['Pendente']}">${status}</span>`;
+        }
+        
+        function getBadgeFin(status) {
+            if(status === 'Pago') return `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-emerald-100 text-emerald-700 border border-emerald-200"><i data-lucide="check" class="w-3 h-3 inline mr-1"></i>Pago</span>`;
+            if(status === 'Cancelado') return `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-red-100 text-red-700 border border-red-200">Cancelado</span>`;
+            return `<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-yellow-100 text-yellow-700 border border-yellow-200">Pendente</span>`;
+        }
+
+        function renderOS(filter = '') {
+            const tbody = document.getElementById('table-os');
+            tbody.innerHTML = '';
+            
+            const filteredOS = ordensServico.filter(os => {
+                const cliente = clientes.find(c => c.id == os.clienteId);
+                const searchStr = `${os.id} ${cliente ? cliente.nome : ''} ${os.aparelho}`.toLowerCase();
+                return searchStr.includes(filter.toLowerCase());
+            });
+
+            filteredOS.forEach(os => {
+                const cliente = clientes.find(c => c.id == os.clienteId);
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 transition group">
+                        <td class="py-4 px-6 font-bold text-blue-600">${os.id}</td>
+                        <td class="py-4 px-6 font-semibold text-gray-800">${cliente ? cliente.nome : 'Desconhecido'}</td>
+                        <td class="py-4 px-6">
+                            <p class="font-medium text-gray-800">${os.aparelho}</p>
+                            <p class="text-xs text-gray-500 truncate max-w-[200px]" title="${os.defeito}">${os.defeito}</p>
+                        </td>
+                        <td class="py-4 px-6 text-center">${getBadgeOS(os.status)}</td>
+                        <td class="py-4 px-6 text-center">${getBadgeFin(os.pagamentoStatus)}</td>
+                        <td class="py-4 px-6 text-center opacity-50 group-hover:opacity-100 transition">
+                            <button onclick="openModalOS('${os.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition" title="Editar OS">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete('os', '${os.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition ml-1" title="Excluir OS">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function renderEstoque(filter = '') {
+            const tbody = document.getElementById('table-estoque');
+            tbody.innerHTML = '';
+            
+            const filtered = estoque.filter(p => 
+                p.nome.toLowerCase().includes(filter.toLowerCase()) || 
+                p.id.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filtered.forEach(item => {
+                const isLow = item.qtd < 5;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 transition group ${item.qtd === 0 ? 'bg-red-50/20' : ''}">
+                        <td class="py-4 px-6 text-gray-500 text-xs font-mono font-bold">${item.id}</td>
+                        <td class="py-4 px-6 font-semibold text-gray-800">${item.nome}</td>
+                        <td class="py-4 px-6 text-center">
+                            <span class="px-3 py-1 rounded-lg font-bold ${isLow ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-800'}">${item.qtd}</span>
+                        </td>
+                        <td class="py-4 px-6 text-gray-800 font-medium text-right">${formatMoney(item.preco)}</td>
+                        <td class="py-4 px-6 text-center opacity-50 group-hover:opacity-100 transition">
+                            <button onclick="openModalEstoque('${item.id}')" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition" title="Editar">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete('estoque', '${item.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition ml-1" title="Excluir">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function renderFinanceiro() {
+            const tbody = document.getElementById('table-financeiro');
+            tbody.innerHTML = '';
+            
+            ordensServico.forEach(os => {
+                const cliente = clientes.find(c => c.id == os.clienteId);
+                const isPago = os.pagamentoStatus === 'Pago';
+                const isCancelado = os.pagamentoStatus === 'Cancelado';
+                const isPendente = os.pagamentoStatus === 'Pendente';
+
+                // Ações Financeiras
+                let actionsHTML = `<span class="text-gray-300 text-xs font-medium">Sem ações</span>`;
+                
+                if (isPendente) {
+                    actionsHTML = `
+                        <div class="flex items-center justify-center gap-2">
+                            <button onclick="marcarPago('${os.id}')" class="flex items-center gap-1 px-3 py-1.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-lg transition font-medium text-xs" title="Marcar como Pago">
+                                <i data-lucide="check" class="w-3.5 h-3.5"></i> Pagar
+                            </button>
+                            <button onclick="abrirModalDesconto('${os.id}', ${os.valor})" class="flex items-center gap-1 px-3 py-1.5 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-lg transition font-medium text-xs" title="Aplicar Desconto">
+                                <i data-lucide="percent" class="w-3.5 h-3.5"></i> Desc.
+                            </button>
+                            <button onclick="cancelarPagamento('${os.id}')" class="flex items-center gap-1 px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-600 hover:text-white rounded-lg transition font-medium text-xs" title="Cancelar Pagamento">
+                                <i data-lucide="x" class="w-3.5 h-3.5"></i> Canc.
+                            </button>
+                        </div>
+                    `;
+                }
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 transition border-b border-gray-50">
+                        <td class="py-4 px-6 text-gray-500 font-medium">${os.data}</td>
+                        <td class="py-4 px-6">
+                            <p class="font-bold text-blue-600">${os.id}</p>
+                            <p class="text-xs text-gray-500 font-medium mt-0.5">${cliente ? cliente.nome : 'Desconhecido'}</p>
+                        </td>
+                        <td class="py-4 px-6 text-center">${getBadgeFin(os.pagamentoStatus)}</td>
+                        <td class="py-4 px-6 text-right font-bold ${isPago ? 'text-emerald-600' : 'text-gray-700'}">${formatMoney(os.valor)}</td>
+                        <td class="py-4 px-6 text-center">
+                            ${actionsHTML}
+                        </td>
+                    </tr>
+                `;
+            });
+
+            lucide.createIcons();
+        }
+
+        function renderAdmin() {
+            const tbody = document.getElementById('table-admin');
+            tbody.innerHTML = '';
+            administradores.forEach(adm => {
+                let badgeColor = adm.cargo === 'Gerente' ? 'bg-purple-100 text-purple-700 border border-purple-200' : 'bg-gray-100 text-gray-700 border border-gray-200';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50/80 transition group">
+                        <td class="py-4 px-6 font-semibold text-gray-800 flex items-center gap-3">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-100 to-indigo-100 flex items-center justify-center text-blue-700 font-bold text-xs shadow-sm">${adm.nome.charAt(0)}</div>
+                            ${adm.nome}
+                        </td>
+                        <td class="py-4 px-6 text-gray-600">${adm.email}</td>
+                        <td class="py-4 px-6 text-center"><span class="px-2.5 py-1 rounded-md text-xs font-bold ${badgeColor}">${adm.cargo}</span></td>
+                        <td class="py-4 px-6 text-center opacity-50 group-hover:opacity-100 transition">
+                            <button onclick="openModalAdmin(${adm.id})" class="text-blue-600 hover:bg-blue-50 p-2 rounded-lg transition" title="Editar">
+                                <i data-lucide="edit-2" class="w-4 h-4"></i>
+                            </button>
+                            <button onclick="confirmDelete('admin', ${adm.id})" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition ml-1" title="Excluir">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            lucide.createIcons();
+        }
+
+        function updateAllViews() {
+            renderDashboard();
+            renderClientes(document.getElementById('search-clientes').value);
+            renderOS(document.getElementById('search-os').value);
+            renderEstoque(document.getElementById('search-pecas').value);
+            renderFinanceiro();
+            renderAdmin();
+        }
+
+        // ---- AÇÕES DE PAGAMENTO (Financeiro) ----
+
+        function marcarPago(osId) {
+            const os = ordensServico.find(o => o.id === osId);
+            if(os) {
+                os.pagamentoStatus = 'Pago';
+                if(os.status !== 'Concluído') os.status = 'Concluído'; // auto completa
+                updateAllViews();
+                showToast(`Pagamento da ${osId} registrado!`, 'success');
+            }
+        }
+
+        function cancelarPagamento(osId) {
+            const os = ordensServico.find(o => o.id === osId);
+            if(os) {
+                os.pagamentoStatus = 'Cancelado';
+                os.status = 'Cancelado';
+                updateAllViews();
+                showToast(`OS ${osId} e pagamento cancelados.`, 'error');
+            }
+        }
+
+        function abrirModalDesconto(osId, valorAtual) {
+            document.getElementById('desc-os-id').value = osId;
+            document.getElementById('desc-valor').value = ''; // limpa
+            document.getElementById('desc-valor').max = valorAtual;
+            
+            const modal = document.getElementById('modal-desconto');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            setTimeout(() => document.getElementById('desc-valor').focus(), 50);
+        }
+
+        function fecharModalDesconto() {
+            const modal = document.getElementById('modal-desconto');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('form-desconto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const osId = document.getElementById('desc-os-id').value;
+            const desconto = parseFloat(document.getElementById('desc-valor').value);
+            
+            const os = ordensServico.find(o => o.id === osId);
+            if(os) {
+                if (desconto < 0 || desconto > os.valor) {
+                    showToast('Valor de desconto inválido.', 'error');
+                    return;
+                }
+                
+                os.valor = os.valor - desconto;
+                os.pagamentoStatus = 'Pago';
+                if(os.status !== 'Concluído') os.status = 'Concluído';
+                
+                updateAllViews();
+                showToast(`Desconto aplicado e OS ${osId} paga!`, 'success');
+                fecharModalDesconto();
+            }
+        });
+
+        // ---- EXCLUSÃO GENÉRICA ----
+        function confirmDelete(type, id) {
+            itemToDelete = { type, id };
+            const modal = document.getElementById('modal-confirm-delete');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeModalDelete() {
+            itemToDelete = null;
+            const modal = document.getElementById('modal-confirm-delete');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        document.getElementById('btn-confirm-delete').addEventListener('click', () => {
+            if(!itemToDelete) return;
+            
+            const { type, id } = itemToDelete;
+            
+            if(type === 'cliente') {
+                clientes = clientes.filter(c => c.id !== id);
+            } else if (type === 'os') {
+                ordensServico = ordensServico.filter(o => o.id !== id);
+            } else if (type === 'estoque') {
+                estoque = estoque.filter(e => e.id !== id);
+            } else if (type === 'admin') {
+                administradores = administradores.filter(a => a.id !== id);
+            }
+
+            updateAllViews();
+            showToast('Item excluído com sucesso.', 'success');
+            closeModalDelete();
+        });
+
+        // ---- NAVEGAÇÃO DE ABAS ----
+        const navBtns = document.querySelectorAll('.nav-btn, .mobile-nav-btn');
+        const tabContents = document.querySelectorAll('.tab-content');
+        const headerTitle = document.getElementById('header-title');
+
+        const titles = {
+            'dashboard': 'Visão Geral',
+            'clientes': 'Gestão de Clientes',
+            'os': 'Ordens de Serviço',
+            'estoque': 'Estoque e Peças',
+            'financeiro': 'Financeiro',
+            'admin': 'Administradores do Sistema'
+        };
+
+        navBtns.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const target = e.currentTarget.getAttribute('data-target');
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`tab-${target}`).classList.add('active');
+                headerTitle.textContent = titles[target];
+
+                // Desktop Nav Styling
+                document.querySelectorAll('.nav-btn').forEach(nav => {
+                    nav.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 hover:bg-[#1E293B] hover:text-white text-gray-400 font-medium';
+                });
+                const activeDesktopBtn = document.querySelector(`.nav-btn[data-target="${target}"]`);
+                if(activeDesktopBtn) activeDesktopBtn.className = 'nav-btn w-full flex items-center gap-3 px-4 py-3.5 rounded-xl transition-all duration-200 bg-blue-600 text-white shadow-lg shadow-blue-900/20 font-medium';
+
+                // Mobile Nav Styling
+                document.querySelectorAll('.mobile-nav-btn').forEach(nav => {
+                    nav.className = 'mobile-nav-btn p-3 rounded-xl text-gray-500 shrink-0';
+                });
+                const activeMobileBtn = document.querySelector(`.mobile-nav-btn[data-target="${target}"]`);
+                if(activeMobileBtn) activeMobileBtn.className = 'mobile-nav-btn p-3 rounded-xl text-blue-600 bg-blue-50 shrink-0';
+            });
+        });
+
+        // ---- MODAIS E FORMS (CRUD) ----
+
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            const content = document.getElementById(`${id}-content`);
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Animação leve ao abrir
+            setTimeout(() => {
+                if(content) {
+                    content.classList.remove('scale-95', 'opacity-0');
+                    content.classList.add('scale-100', 'opacity-100');
+                }
+            }, 10);
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            const content = document.getElementById(`${id}-content`);
+            
+            if(content) {
+                content.classList.remove('scale-100');
+                content.classList.add('scale-95');
+            }
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                const form = modal.querySelector('form');
+                if(form) form.reset();
+            }, 150);
+        }
+
+        // Cliente
+        function openModalCliente(id = null) {
+            const form = document.getElementById('form-cliente');
+            form.reset();
+            document.getElementById('cli-id').value = '';
+            document.getElementById('modal-cliente-title').innerText = 'Novo Cliente';
+
+            if (id) {
+                const cli = clientes.find(c => c.id === id);
+                if (cli) {
+                    document.getElementById('cli-id').value = cli.id;
+                    document.getElementById('cli-nome').value = cli.nome;
+                    document.getElementById('cli-telefone').value = cli.telefone;
+                    document.getElementById('cli-endereco').value = cli.endereco;
+                    document.getElementById('modal-cliente-title').innerText = `Editar: ${cli.nome}`;
+                }
+            }
+            openModal('modal-cliente');
+        }
+
+        document.getElementById('form-cliente').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const idToEdit = document.getElementById('cli-id').value;
+            const nome = document.getElementById('cli-nome').value;
+            const telefone = document.getElementById('cli-telefone').value;
+            const endereco = document.getElementById('cli-endereco').value;
+            
+            if (idToEdit) {
+                const index = clientes.findIndex(c => c.id == idToEdit);
+                clientes[index] = { ...clientes[index], nome, telefone, endereco };
+                showToast('Cadastro atualizado com sucesso!');
+            } else {
+                const newId = clientes.length > 0 ? Math.max(...clientes.map(c => c.id)) + 1 : 1;
+                clientes.push({ id: newId, nome, telefone, endereco });
+                showToast('Cliente cadastrado com sucesso!');
+            }
+            
+            updateAllViews();
+            closeModal('modal-cliente');
+        });
+
+        // OS
+        function openModalOS(id = null) {
+            const form = document.getElementById('form-os');
+            form.reset();
+            document.getElementById('os-id').value = '';
+            document.getElementById('modal-os-title').innerText = 'Nova Ordem de Serviço';
+            
+            if (id) {
+                const os = ordensServico.find(o => o.id === id);
+                if (os) {
+                    document.getElementById('os-id').value = os.id;
+                    // Datalist logic
+                    const cliente = clientes.find(c => c.id == os.clienteId);
+                    if(cliente) {
+                        document.getElementById('os-cliente-input').value = `${cliente.id} - ${cliente.nome}`;
+                    }
+                    
+                    document.getElementById('os-aparelho').value = os.aparelho;
+                    document.getElementById('os-defeito').value = os.defeito;
+                    document.getElementById('os-valor').value = os.valor;
+                    document.getElementById('os-status').value = os.status;
+                    document.getElementById('modal-os-title').innerText = `Editar ${os.id}`;
+                }
+            }
+            openModal('modal-os');
+        }
+
+        document.getElementById('form-os').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const idToEdit = document.getElementById('os-id').value;
+            
+            // Extrai ID do Datalist input "1 - João" -> "1"
+            const cliInputVal = document.getElementById('os-cliente-input').value;
+            const clienteIdStr = cliInputVal.split(' - ')[0];
+            const clienteId = parseInt(clienteIdStr);
+            
+            if(isNaN(clienteId) || !clientes.some(c => c.id === clienteId)) {
+                showToast('Por favor, selecione um cliente válido da lista.', 'error');
+                return;
+            }
+
+            const aparelho = document.getElementById('os-aparelho').value;
+            const defeito = document.getElementById('os-defeito').value;
+            const valor = parseFloat(document.getElementById('os-valor').value);
+            const status = document.getElementById('os-status').value;
+            
+            if (idToEdit) {
+                const index = ordensServico.findIndex(o => o.id === idToEdit);
+                ordensServico[index] = { ...ordensServico[index], clienteId, aparelho, defeito, valor, status };
+                showToast(`OS ${idToEdit} atualizada!`);
+            } else {
+                // Auto generate
+                const ultNum = ordensServico.length > 0 ? Math.max(...ordensServico.map(o => parseInt(o.id.split('-')[1]))) : 1041;
+                const id = `OS-${ultNum + 1}`;
+                
+                ordensServico.unshift({
+                    id, clienteId, aparelho, defeito, status, valor, data: getTodayDate(), pagamentoStatus: 'Pendente'
+                });
+                showToast(`OS ${id} criada com sucesso!`);
+            }
+            
+            updateAllViews();
+            closeModal('modal-os');
+        });
+
+        // Estoque
+        function openModalEstoque(id = null) {
+            const form = document.getElementById('form-estoque');
+            form.reset();
+            document.getElementById('est-id').value = '';
+            document.getElementById('modal-estoque-title').innerText = 'Adicionar Peça';
+
+            if (id) {
+                const item = estoque.find(e => e.id === id);
+                if(item) {
+                    document.getElementById('est-id').value = item.id;
+                    document.getElementById('est-nome').value = item.nome;
+                    document.getElementById('est-qtd').value = item.qtd;
+                    document.getElementById('est-preco').value = item.preco;
+                    document.getElementById('modal-estoque-title').innerText = 'Editar Peça';
+                }
+            }
+            openModal('modal-estoque');
+        }
+
+        document.getElementById('form-estoque').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const idToEdit = document.getElementById('est-id').value;
+            const nome = document.getElementById('est-nome').value;
+            const qtd = parseInt(document.getElementById('est-qtd').value);
+            const preco = parseFloat(document.getElementById('est-preco').value);
+            
+            if(idToEdit) {
+                const index = estoque.findIndex(e => e.id === idToEdit);
+                estoque[index] = { ...estoque[index], nome, qtd, preco };
+                showToast('Peça atualizada!');
+            } else {
+                const num = estoque.length > 0 ? Math.max(...estoque.map(e => parseInt(e.id.split('-')[1]))) : 0;
+                const id = `P-${(num + 1).toString().padStart(3, '0')}`;
+                estoque.push({ id, nome, qtd, preco });
+                showToast('Peça adicionada ao estoque!');
+            }
+            
+            updateAllViews();
+            closeModal('modal-estoque');
+        });
+
+        // Admin
+        function openModalAdmin(id = null) {
+            const form = document.getElementById('form-admin');
+            form.reset();
+            document.getElementById('adm-id').value = '';
+            document.getElementById('modal-admin-title').innerText = 'Novo Administrador';
+
+            if (id) {
+                const adm = administradores.find(a => a.id === id);
+                if(adm) {
+                    document.getElementById('adm-id').value = adm.id;
+                    document.getElementById('adm-nome').value = adm.nome;
+                    document.getElementById('adm-email').value = adm.email;
+                    document.getElementById('adm-cargo').value = adm.cargo;
+                    document.getElementById('modal-admin-title').innerText = 'Editar Administrador';
+                }
+            }
+            openModal('modal-admin');
+        }
+
+        document.getElementById('form-admin').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const idToEdit = document.getElementById('adm-id').value;
+            const nome = document.getElementById('adm-nome').value;
+            const email = document.getElementById('adm-email').value;
+            const cargo = document.getElementById('adm-cargo').value;
+            
+            if(idToEdit) {
+                const index = administradores.findIndex(a => a.id == idToEdit);
+                administradores[index] = { ...administradores[index], nome, email, cargo };
+                showToast('Admin atualizado!');
+            } else {
+                const newId = administradores.length > 0 ? Math.max(...administradores.map(a => a.id)) + 1 : 1;
+                administradores.push({ id: newId, nome, email, cargo });
+                showToast('Administrador adicionado!');
+            }
+            
+            updateAllViews();
+            closeModal('modal-admin');
+        });
+
+        // Buscas em Tempo Real
+        document.getElementById('search-clientes').addEventListener('input', e => renderClientes(e.target.value));
+        document.getElementById('search-os').addEventListener('input', e => renderOS(e.target.value));
+        document.getElementById('search-pecas').addEventListener('input', e => renderEstoque(e.target.value));
+
+        // Inicialização
+        updateAllViews();
+
+    </script>
+</body>
+</html>
